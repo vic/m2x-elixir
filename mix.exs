@@ -15,6 +15,6 @@ defmodule M2X.Mixfile do
 
   # Dependencies
   defp deps do
-    []
+    [ hackney: "~> 1.0" ]
   end
 end
