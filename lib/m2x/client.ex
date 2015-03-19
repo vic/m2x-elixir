@@ -8,7 +8,8 @@ defmodule M2X.Client do
   defstruct \
     api_base:    @default_api_base,
     api_version: @default_api_version,
-    api_key:     nil
+    api_key:     nil,
+    http_engine: :hackney
 
   defmodule Response do
     defstruct \
@@ -35,22 +36,26 @@ defmodule M2X.Client do
   defp request(client, verb, path, params, headers, options\\%{}) do
     url             = make_url(client, path)
     {body, headers} = make_body(params, headers)
-    header_list     = Map.to_list(headers)
+    header_list     = Map.to_list(headers) ++ [
+      {"X-M2X-KEY", client.api_key}
+    ]
     option_list     = Map.to_list(options) ++ [
       ssl_options: [{:cacertfile, @ssl_cacertfile}]
     ]
 
-    :hackney.start
-    make_response :hackney.request(verb, url, header_list, body, option_list)
+    engine = client.http_engine
+    engine.start
+    make_response engine,
+      engine.request(verb, url, header_list, body, option_list)
   end
 
-  defp make_response({:ok, status, header_list, body_ref}) do
+  defp make_response(engine, {:ok, status, header_list, body_ref}) do
     status_range = div(status, 100)
-    {:ok, body}  = :hackney.body(body_ref)
+    {:ok, body}  = engine.body(body_ref)
     headers      = Enum.into(header_list, %{})
-    json         = case headers["Content-Type"] do
+    {:ok, json}  = case headers["Content-Type"] do
                      "application/json" -> JSON.decode(body)
-                     _                  -> nil
+                     _                  -> {:ok, nil}
                    end
     %Response {
       raw:           body,
