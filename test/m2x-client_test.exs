@@ -2,6 +2,11 @@ defmodule M2X.ClientTest do
   use ExUnit.Case
   doctest M2X.Client
 
+  test "user_agent" do
+    assert Regex.match? ~r"\AM2X-Elixir/\S+ elixir/\S+ \(.*\)",
+      M2X.Client.user_agent
+  end
+
   test "default struct values" do
     subject = %M2X.Client { }
     assert subject.api_base    == "https://api-m2x.att.com"

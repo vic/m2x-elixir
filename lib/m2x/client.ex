@@ -1,9 +1,25 @@
 defmodule M2X.Client do
 
-  @default_api_base    "https://api-m2x.att.com"
-  @default_api_version :v2
+  def version, do: "0.0.1"
+
+  @os_type    :os.type
+  @os_version :os.version
+
+  def user_agent do
+    {os_family, os_name} = @os_type
+    {os_family, os_name} = {to_string(os_family), to_string(os_name)}
+    os_version = case @os_version do
+      {maj,min,rel} -> to_string(maj)<>"."<>to_string(min)<>"."<>to_string(rel)
+      string        -> to_string(string)
+    end
+    "M2X-Elixir/" <> version <> " elixir/" <> System.version <> \
+      " (" <> os_family <> ":" <> os_name <> " " <> os_version <> ")"
+  end
 
   @ssl_cacertfile __DIR__ <> "/cacert.pem"
+
+  @default_api_base    "https://api-m2x.att.com"
+  @default_api_version :v2
 
   defstruct \
     api_base:    @default_api_base,
@@ -37,7 +53,8 @@ defmodule M2X.Client do
     url             = make_url(client, path)
     {body, headers} = make_body(params, headers)
     header_list     = Map.to_list(headers) ++ [
-      {"X-M2X-KEY", client.api_key}
+      {"X-M2X-KEY", client.api_key},
+      {"User-Agent", user_agent},
     ]
     option_list     = Map.to_list(options) ++ [
       ssl_options: [{:cacertfile, @ssl_cacertfile}]

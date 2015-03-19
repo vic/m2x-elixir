@@ -67,7 +67,9 @@ defmodule MockEngine do
         ^body = state.req_body
     end
     api_key = state.api_key
-    {:ok, ^api_key} = Map.fetch(headers, "X-M2X-KEY")
+    user_agent = M2X.Client.user_agent
+    {:ok, ^api_key}    = Map.fetch(headers, "X-M2X-KEY")
+    {:ok, ^user_agent} = Map.fetch(headers, "User-Agent")
     {:reply, {:ok, state.res_status, state.res_headers, state.ref}, state}
   end
 
