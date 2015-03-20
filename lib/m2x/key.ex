@@ -1,7 +1,5 @@
 defmodule M2X.Key do
-  use M2X.Resource
-
-  @main_path "/keys"
+  use M2X.Resource, main_path: "/keys"
 
   def path(%M2X.Key { attributes: %{ "key"=>key } }) do path(key) end
   def path(key) when is_binary(key) do @main_path<>"/"<>key end

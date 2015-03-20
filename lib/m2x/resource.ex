@@ -1,6 +1,8 @@
 # Common behaviour module for M2X Resources
 defmodule M2X.Resource do
-  defmacro __using__(_opts) do
+  defmacro __using__(opts) do
+    {:ok, main_path} = Keyword.fetch(opts, :main_path)
+
     quote location: :keep do
 
       defstruct \
@@ -20,6 +22,19 @@ defmodule M2X.Resource do
           {get, Map.put(key, update, attributes)}
         end
       end
+
+      @main_path unquote(main_path)
+
+      ##
+      # Module functions
+
+      def create!(client = %M2X.Client{}, params\\%{}) do
+        res = M2X.Client.post(client, @main_path, params)
+        res.success? and %TheModule { client: client, attributes: res.json }
+      end
+
+      ##
+      # Struct functions
 
       # Query the service and return a refreshed version of the same
       # resource struct with all attributes set to their latest values.

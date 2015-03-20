@@ -1,7 +1,5 @@
 defmodule M2X.Device do
-  use M2X.Resource
-
-  @main_path "/devices"
+  use M2X.Resource, main_path: "/devices"
 
   def path(%M2X.Device { attributes: %{ "id"=>id } }) do path(id) end
   def path(id) when is_binary(id) do @main_path<>"/"<>id end

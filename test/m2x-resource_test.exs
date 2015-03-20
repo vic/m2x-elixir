@@ -31,6 +31,26 @@ defmodule M2X.ResourceTest.Common do
         assert subject["bar"]     == test_attributes["bar"]
       end
 
+      test "create!/1" do
+        client = MockEngine.client \
+          {:post, main_path, %{}},
+          {204, new_test_attributes}
+        subject = M2X.Device.create!(client)
+
+        assert subject.client     == client
+        assert subject.attributes == new_test_attributes
+      end
+
+      test "create!/2" do
+        client = MockEngine.client \
+          {:post, main_path, test_attributes},
+          {204, new_test_attributes}
+        subject = M2X.Device.create!(client, test_attributes)
+
+        assert subject.client     == client
+        assert subject.attributes == new_test_attributes
+      end
+
       test "refreshed" do
         subject = mock_subject \
           {:get, path, nil},
@@ -65,7 +85,8 @@ defmodule M2X.ResourceTest.Device do
   use M2X.ResourceTest.Common, mod: M2X.Device
   doctest M2X.Device
 
-  def id do   "a2852df27102179429b3a02641594044" end
-  def path do "/v2/devices/"<>id  end
+  def id             do "a2852df27102179429b3a02641594044" end
+  def main_path      do "/v2/devices"  end
+  def path           do main_path<>"/"<>id   end
   def required_attrs do %{ "id" => id } end
 end
