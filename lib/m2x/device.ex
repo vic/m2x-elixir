@@ -1,7 +1,5 @@
 defmodule M2X.Device do
-  defstruct \
-    client:     nil,
-    attributes: %{}
+  use M2X.Resource
 
   @main_path "/devices"
 
@@ -74,16 +72,5 @@ defmodule M2X.Device do
   def post_updates(device, params) do
     M2X.Client.post(device.client, path(device)<>"/updates", params)
   end
-end
 
-# Implement Access protocol to delegate device[key] to device.attributes[key]
-defimpl Access, for: M2X.Device do
-  def get(%M2X.Device { attributes: attributes }, key) do
-    Map.get(attributes, key)
-  end
-  def get_and_update(%M2X.Device { attributes: attributes }, key, fun) do
-    current_value = Map.get(attributes, key)
-    {get, update} = fun.(current_value)
-    {get, Map.put(key, update, attributes)}
-  end
 end

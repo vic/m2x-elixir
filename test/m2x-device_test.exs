@@ -7,7 +7,7 @@ defmodule M2X.DeviceTest do
   end
 
   def test_location do
-    %{ "latitude" => -37.978842, "longitude" => -57.547877, "elevation" => 5 }
+    %{ "latitude"=>-37.978842356, "longitude"=>-57.547877691, "elevation"=>5 }
   end
 
   def test_attributes do
@@ -19,14 +19,6 @@ defmodule M2X.DeviceTest do
       client: MockEngine.client(request, response),
       attributes: test_attributes,
     }
-  end
-
-  test "attribute access" do
-    subject = %M2X.Device { attributes: test_attributes }
-
-    assert subject.attributes == test_attributes
-    assert subject["id"]      == test_attributes["id"]
-    assert subject["name"]    == test_attributes["name"]
   end
 
   test "fetch" do
@@ -100,4 +92,5 @@ defmodule M2X.DeviceTest do
 
     assert M2X.Device.post_updates(subject, params).status == 202
   end
+
 end
