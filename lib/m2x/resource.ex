@@ -28,6 +28,8 @@ defmodule M2X.Resource do
       ##
       # Module functions
 
+      # Create a new resource using the given client and optional params,
+      # returning a struct with the attributes of the new resource.
       def create!(client = %M2X.Client{}, params\\%{}) do
         res = M2X.Client.post(client, @main_path, params)
         res.success? and %TheModule { client: client, attributes: res.json }
