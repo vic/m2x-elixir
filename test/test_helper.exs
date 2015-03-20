@@ -41,6 +41,12 @@ defmodule MockEngine do
     GenServer.call MockEngineProcess, {:body, ref}
   end
 
+  defp to_json(nil) do "" end
+  defp to_json(params) do
+    {:ok, json} = JSON.encode(params)
+    json
+  end
+
   def handle_call({:setup, client, {req_verb, req_path, req_params},
                                    {res_status, res_params}}, _, state) do
     client = client || state.client
@@ -50,9 +56,9 @@ defmodule MockEngine do
       api_base:    client && client.api_base || state.api_base,
       req_verb:    req_verb,
       req_path:    req_path,
-      req_body:    req_params && JSON.encode(req_params) || "",
+      req_body:    to_json(req_params),
       res_status:  res_status,
-      res_body:    res_params && JSON.encode(res_params) || "",
+      res_body:    to_json(res_params),
       res_headers: res_params && [{"Content-Type", "application/json"}] || []
     }}
   end
@@ -61,10 +67,10 @@ defmodule MockEngine do
     headers = Enum.into(header_list, %{})
     {^verb, ^url} = {state.req_verb, state.api_base <> state.req_path}
     case state.req_body do
-      "" -> nil
-      _ ->
-        "application/json" = Map.fetch(headers, "Content-Type")
-        ^body = state.req_body
+    "" -> ^body = ""
+    _  ->
+      {:ok, "application/json"} = Map.fetch(headers, "Content-Type")
+      ^body = state.req_body
     end
     api_key = state.api_key
     user_agent = M2X.Client.user_agent
@@ -75,7 +81,7 @@ defmodule MockEngine do
 
   def handle_call({:body, given_ref}, _, state) do
     ^given_ref = state.ref
-    {:reply, state.res_body, state}
+    {:reply, {:ok, state.res_body}, state}
   end
 end
 
