@@ -47,6 +47,7 @@ defmodule M2X.ResourceTest.Common do
           {204, new_test_attributes}
         subject = TheModule.create!(client, test_attributes)
 
+        %TheModule { } = subject
         assert subject.client     == client
         assert subject.attributes == new_test_attributes
       end
@@ -58,6 +59,7 @@ defmodule M2X.ResourceTest.Common do
         assert subject.attributes == test_attributes
         new_subject = TheModule.refreshed(subject)
 
+        %TheModule { } = new_subject
         assert new_subject.client == subject.client
         assert new_subject.attributes == new_test_attributes
       end
@@ -87,6 +89,17 @@ defmodule M2X.ResourceTest.Device do
 
   def id             do "0123456789abcdef0123456789abcdef" end
   def main_path      do "/v2/devices"                      end
+  def path           do main_path<>"/"<>id                 end
+  def required_attrs do %{ "id" => id }                    end
+end
+
+defmodule M2X.ResourceTest.Distribution do
+  use ExUnit.Case
+  use M2X.ResourceTest.Common, mod: M2X.Distribution
+  doctest M2X.Distribution
+
+  def id             do "0123456789abcdef0123456789abcdef" end
+  def main_path      do "/v2/distributions"                end
   def path           do main_path<>"/"<>id                 end
   def required_attrs do %{ "id" => id }                    end
 end

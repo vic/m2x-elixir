@@ -27,13 +27,14 @@ defmodule M2X.DeviceTest do
       {200, test_attributes}
     subject = M2X.Device.fetch(client, id)
 
+    %M2X.Device { } = subject
     assert subject.client == client
     assert subject.attributes == test_attributes
   end
 
   test "list, catalog" do
     params = %{ q: "test" }
-    suffix = "2852df27102179429b3a02641594044"
+    <<_::binary-size(1), suffix::binary>> = id
     result = %{ devices: [
       %{ id: "a"<>suffix, name: "test", description: "foo" },
       %{ id: "b"<>suffix, name: "test", description: "bar" },
