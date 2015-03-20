@@ -9,7 +9,7 @@ defmodule M2X.Device do
 
   # Retrieve a view of the Device associated with the given unique id.
   #
-  # https://m2x.att.com/developer/documentation/v2/device#List-Search-Devices
+  # https://m2x.att.com/developer/documentation/v2/device#View-Device-Details
   def fetch(client = %M2X.Client{}, id) do
     res = M2X.Client.get(client, path(id))
     res.success? and %M2X.Device { client: client, attributes: res.json }
