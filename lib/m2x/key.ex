@@ -40,4 +40,5 @@ defmodule M2X.Key do
     res = M2X.Client.get(client, M2X.Key.path(key))
     res.success? and %M2X.Key { key | attributes: res.json }
   end
+
 end
