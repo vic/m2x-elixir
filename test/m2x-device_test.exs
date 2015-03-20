@@ -2,23 +2,23 @@ defmodule M2X.DeviceTest do
   use ExUnit.Case
   doctest M2X.Device
 
-  def id do
-    "a2852df27102179429b3a02641594044"
+  def mock_subject(request, response) do
+    %M2X.Device {
+      client: MockEngine.client(request, response),
+      attributes: test_attributes,
+    }
   end
 
-  def test_location do
-    %{ "latitude"=>-37.978842356, "longitude"=>-57.547877691, "elevation"=>5 }
+  def id do
+    "0123456789abcdef0123456789abcdef"
   end
 
   def test_attributes do
     %{ "id"=>id, "name"=>"test", "visibility"=>"public", "description"=>"foo" }
   end
 
-  def mock_subject(request, response) do
-    %M2X.Device {
-      client: MockEngine.client(request, response),
-      attributes: test_attributes,
-    }
+  def test_location do
+    %{ "latitude"=>-37.978842356, "longitude"=>-57.547877691, "elevation"=>5 }
   end
 
   test "fetch" do

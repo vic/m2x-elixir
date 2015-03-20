@@ -36,8 +36,10 @@ defmodule M2X.ResourceTest.Common do
           {:get, path, nil},
           {200, new_test_attributes}
         assert subject.attributes == test_attributes
-        subject = M2X.Device.refreshed(subject)
-        assert subject.attributes == new_test_attributes
+        new_subject = M2X.Device.refreshed(subject)
+
+        assert new_subject.client == subject.client
+        assert new_subject.attributes == new_test_attributes
       end
 
       test "update!" do
