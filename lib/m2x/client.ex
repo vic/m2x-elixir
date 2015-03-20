@@ -41,7 +41,7 @@ defmodule M2X.Client do
 
   # Define REST methods for accessing the M2X API directly.
   for method <- [:get, :post, :put, :delete, :head, :options, :patch] do
-    def unquote(method)(client, path, params\\nil, headers\\%{}) do
+    def unquote(method)(client = %M2X.Client{}, path, params\\nil, headers\\%{}) when is_binary(path) do
       request(client, unquote(method), path, params, headers)
     end
   end

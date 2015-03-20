@@ -10,7 +10,7 @@ defmodule M2X.Device do
   # Retrieve a view of the Device associated with the given unique id.
   #
   # https://m2x.att.com/developer/documentation/v2/device#List-Search-Devices
-  def fetch(client, id) do
+  def fetch(client = %M2X.Client{}, id) do
     res = M2X.Client.get(client, path(id))
     res.success? and %M2X.Device { client: client, attributes: res.json }
   end
@@ -19,7 +19,7 @@ defmodule M2X.Device do
   # meet the search criteria.
   #
   # https://m2x.att.com/developer/documentation/v2/device#List-Search-Devices
-  def list(client, params\\nil) do
+  def list(client = %M2X.Client{}, params\\nil) do
     res = M2X.Client.get(client, @main_path, params)
     res.success? and Enum.map res.json["devices"], fn (attributes) ->
       %M2X.Device { client: client, attributes: attributes }
@@ -34,7 +34,7 @@ defmodule M2X.Device do
   # and its values.
   #
   # https://m2x.att.com/developer/documentation/v2/device#List-Search-Public-Devices-Catalog
-  def catalog(client, params\\nil) do
+  def catalog(client = %M2X.Client{}, params\\nil) do
     res = M2X.Client.get(client, @main_path<>"/catalog", params)
     res.success? and Enum.map res.json["devices"], fn (attributes) ->
       %M2X.Device { client: client, attributes: attributes }
@@ -50,15 +50,15 @@ defmodule M2X.Device do
   # of 204) if the device has no location defined.
   #
   # https://m2x.att.com/developer/documentation/v2/device#Read-Device-Location
-  def get_location(device) do
-    M2X.Client.get(device.client, path(device)<>"/location")
+  def get_location(device = %M2X.Device { client: client }) do
+    M2X.Client.get(client, path(device)<>"/location")
   end
 
   # Update the current location of the specified device.
   #
   # https://m2x.att.com/developer/documentation/v2/device#Update-Device-Location
-  def update_location(device, params) do
-    M2X.Client.put(device.client, path(device)<>"/location", params)
+  def update_location(device = %M2X.Device { client: client }, params) do
+    M2X.Client.put(client, path(device)<>"/location", params)
   end
 
   # Post Device Updates (Multiple Values to Multiple Streams)
@@ -67,8 +67,8 @@ defmodule M2X.Device do
   # belonging to a device and optionally, the device location.
   #
   # https://staging.m2x.sl.attcompute.com/developer/documentation/v2/device#Post-Device-Updates--Multiple-Values-to-Multiple-Streams-
-  def post_updates(device, params) do
-    M2X.Client.post(device.client, path(device)<>"/updates", params)
+  def post_updates(device = %M2X.Device { client: client }, params) do
+    M2X.Client.post(client, path(device)<>"/updates", params)
   end
 
 end

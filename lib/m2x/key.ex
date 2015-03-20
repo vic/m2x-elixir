@@ -10,7 +10,7 @@ defmodule M2X.Key do
   # Retrieve a view of the Key associated with the given unique key string.
   #
   # https://m2x.att.com/developer/documentation/v2/keys#View-Key-Details
-  def fetch(client, key) do
+  def fetch(client = %M2X.Client{}, key) do
     res = M2X.Client.get(client, path(key))
     res.success? and %M2X.Key { client: client, attributes: res.json }
   end
@@ -19,7 +19,7 @@ defmodule M2X.Key do
   # meet the search criteria.
   #
   # https://m2x.att.com/developer/documentation/v2/keys#List-Keys
-  def list(client, params\\nil) do
+  def list(client = %M2X.Client{}, params\\nil) do
     res = M2X.Client.get(client, @main_path, params)
     res.success? and Enum.map res.json["keys"], fn (attributes) ->
       %M2X.Key { client: client, attributes: attributes }
