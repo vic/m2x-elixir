@@ -7,7 +7,20 @@ defmodule M2X.ResourceTest.Common do
       alias unquote(mod), as: TheModule
 
       def test_attributes do
-        %{ "foo"=>88, "bar"=>"ninety-nine" }
+        Map.merge required_attrs,
+          %{ "foo"=>88, "bar"=>"ninety-nine" }
+      end
+
+      def new_test_attributes do
+        Map.merge required_attrs,
+          %{ "foo"=>99, "bar"=>"eighty-eight", "baz"=>true }
+      end
+
+      def mock_subject(request, response) do
+        %TheModule {
+          client: MockEngine.client(request, response),
+          attributes: test_attributes,
+        }
       end
 
       test "attribute access" do
@@ -18,6 +31,29 @@ defmodule M2X.ResourceTest.Common do
         assert subject["bar"]     == test_attributes["bar"]
       end
 
+      test "refreshed" do
+        subject = mock_subject \
+          {:get, path, nil},
+          {200, new_test_attributes}
+        assert subject.attributes == test_attributes
+        subject = M2X.Device.refreshed(subject)
+        assert subject.attributes == new_test_attributes
+      end
+
+      test "update!" do
+        subject = mock_subject \
+          {:put, path, new_test_attributes},
+          {204, nil}
+        assert M2X.Device.update!(subject, new_test_attributes).success?
+      end
+
+      test "delete!" do
+        subject = mock_subject \
+          {:delete, path, nil},
+          {204, nil}
+        assert M2X.Device.delete!(subject).success?
+      end
+
     end
   end
 end
@@ -26,4 +62,8 @@ defmodule M2X.ResourceTest.Device do
   use ExUnit.Case
   use M2X.ResourceTest.Common, mod: M2X.Device
   doctest M2X.Device
+
+  def id do   "a2852df27102179429b3a02641594044" end
+  def path do "/v2/devices/"<>id  end
+  def required_attrs do %{ "id" => id } end
 end

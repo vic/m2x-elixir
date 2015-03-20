@@ -21,6 +21,23 @@ defmodule M2X.Resource do
         end
       end
 
+      # Query the service and return a refreshed version of the same
+      # resource struct with all attributes set to their latest values.
+      def refreshed(resource = %TheModule { client: client }) do
+        res = M2X.Client.get(client, TheModule.path(resource))
+        res.success? and %TheModule { resource | attributes: res.json }
+      end
+
+      # Update the remote resource using the given attributes.
+      def update!(resource = %TheModule { client: client }, params) do
+        M2X.Client.put(client, TheModule.path(resource), params)
+      end
+
+      # Delete the remote resource.
+      def delete!(resource = %TheModule { client: client }) do
+        M2X.Client.delete(client, TheModule.path(resource))
+      end
+
     end
   end
 end
