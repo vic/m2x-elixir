@@ -1,5 +1,7 @@
-# Common behaviour module for M2X Resources
 defmodule M2X.Resource do
+  @moduledoc """
+    Common behaviour module for M2X Resources.
+  """
   defmacro __using__(opts) do
     {:ok, main_path} = Keyword.fetch(opts, :main_path)
 
@@ -25,32 +27,34 @@ defmodule M2X.Resource do
 
       @main_path unquote(main_path)
 
-      ##
-      # Module functions
-
-      # Create a new resource using the given client and optional params,
-      # returning a struct with the attributes of the new resource.
+      @doc """
+        Create a new resource using the given client and optional params,
+        returning a struct with the attributes of the new resource.
+      """
       def create!(client = %M2X.Client{}, params\\%{}) do
         res = M2X.Client.post(client, @main_path, params)
         res.success? and %TheModule { client: client, attributes: res.json }
       end
 
-      ##
-      # Struct functions
-
-      # Query the service and return a refreshed version of the same
-      # resource struct with all attributes set to their latest values.
+      @doc """
+        Query the service and return a refreshed version of the same
+        resource struct with all attributes set to their latest values.
+      """
       def refreshed(resource = %TheModule { client: client }) do
         res = M2X.Client.get(client, TheModule.path(resource))
         res.success? and %TheModule { resource | attributes: res.json }
       end
 
-      # Update the remote resource using the given attributes.
+      @doc """
+        Update the remote resource using the given attributes.
+      """
       def update!(resource = %TheModule { client: client }, params) do
         M2X.Client.put(client, TheModule.path(resource), params)
       end
 
-      # Delete the remote resource.
+      @doc """
+        Delete the remote resource.
+      """
       def delete!(resource = %TheModule { client: client }) do
         M2X.Client.delete(client, TheModule.path(resource))
       end

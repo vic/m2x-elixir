@@ -1,24 +1,32 @@
 defmodule M2X.Distribution do
+  @moduledoc """
+    Wrapper for the AT&T M2X Distribution API.
+    https://m2x.att.com/developer/documentation/v2/distribution
+  """
   use M2X.Resource, main_path: "/distributions"
 
+  @doc """
+    Return the API path of the given Distribution or id.
+  """
   def path(%M2X.Distribution { attributes: %{ "id"=>id } }) do path(id) end
   def path(id) when is_binary(id) do @main_path<>"/"<>id end
 
-  ##
-  # Module functions
+  @doc """
+    Retrieve a view of the Distribution associated with the given unique id.
 
-  # Retrieve a view of the Distribution associated with the given unique id.
-  #
-  # https://m2x.att.com/developer/documentation/v2/distribution#View-Distribution-Details
+    https://m2x.att.com/developer/documentation/v2/distribution#View-Distribution-Details
+  """
   def fetch(client = %M2X.Client{}, id) do
     res = M2X.Client.get(client, path(id))
     res.success? and %M2X.Distribution { client: client, attributes: res.json }
   end
 
-  # Retrieve the list of Distributions accessible by the authenticated API key
-  # that meet the search criteria.
-  #
-  # https://m2x.att.com/developer/documentation/v2/distribution#List-Search-Distributions
+  @doc """
+    Retrieve the list of Distributions accessible by the authenticated API key
+    that meet the search criteria.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#List-Search-Distributions
+  """
   def list(client = %M2X.Client{}, params\\nil) do
     res = M2X.Client.get(client, @main_path, params)
     res.success? and Enum.map res.json["distributions"], fn (attributes) ->
@@ -26,12 +34,11 @@ defmodule M2X.Distribution do
     end
   end
 
-  ##
-  # Struct functions
+  @doc """
+    Retrieve list of Devices added to the specified Distribution.
 
-  # Retrieve list of Devices added to the specified Distribution.
-  #
-  # https://m2x.att.com/developer/documentation/v2/distribution#List-Devices-from-an-existing-Distribution
+    https://m2x.att.com/developer/documentation/v2/distribution#List-Devices-from-an-existing-Distribution
+  """
   def devices(dist = %M2X.Distribution{ client: client }, params\\nil) do
     res = M2X.Client.get(client, path(dist)<>"/devices", params)
     res.success? and Enum.map res.json["devices"], fn (attributes) ->
@@ -39,9 +46,11 @@ defmodule M2X.Distribution do
     end
   end
 
-  # Add a new Device to the Distribution, with the given unique serial string.
-  #
-  # https://m2x.att.com/developer/documentation/v2/distribution#Add-Device-to-an-existing-Distribution
+  @doc """
+    Add a new Device to the Distribution, with the given unique serial string.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#Add-Device-to-an-existing-Distribution
+  """
   def add_device(dist = %M2X.Distribution{ client: client }, serial) do
     params = %{ serial: serial }
     res = M2X.Client.post(client, path(dist)<>"/devices", params)
