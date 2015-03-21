@@ -3,13 +3,7 @@ defmodule M2X.Key do
     Wrapper for the AT&T M2X Keys API.
     https://m2x.att.com/developer/documentation/v2/keys
   """
-  use M2X.Resource, main_path: "/keys"
-
-  @doc """
-    Return the API path of the given Key.
-  """
-  def path(%M2X.Key { attributes: %{ "key"=>key } }) do path(key) end
-  def path(key) when is_binary(key) do @main_path<>"/"<>key end
+  use M2X.Resource, path: {"/keys", :key}
 
   @doc """
     Retrieve a view of the Key associated with the given unique key string.
@@ -44,7 +38,7 @@ defmodule M2X.Key do
     https://m2x.att.com/developer/documentation/v2/keys#Regenerate-Key
   """
   def regenerated(key = %M2X.Key { client: client }) do
-    res = M2X.Client.get(client, M2X.Key.path(key))
+    res = M2X.Client.get(client, path(key))
     res.success? and %M2X.Key { key | attributes: res.json }
   end
 

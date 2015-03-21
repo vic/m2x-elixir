@@ -3,13 +3,7 @@ defmodule M2X.Device do
     Wrapper for the AT&T M2X Device API.
     https://m2x.att.com/developer/documentation/v2/device
   """
-  use M2X.Resource, main_path: "/devices"
-
-  @doc """
-    Return the API path of the given Device or id.
-  """
-  def path(%M2X.Device { attributes: %{ "id"=>id } }) do path(id) end
-  def path(id) when is_binary(id) do @main_path<>"/"<>id end
+  use M2X.Resource, path: {"/devices", :id}
 
   @doc """
     Retrieve a view of the Device associated with the given unique id.

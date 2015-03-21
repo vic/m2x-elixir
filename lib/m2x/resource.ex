@@ -3,12 +3,13 @@ defmodule M2X.Resource do
     Common behaviour module for M2X Resources.
   """
   defmacro __using__(opts) do
-    {:ok, main_path} = Keyword.fetch(opts, :main_path)
+    {:ok, path} = Keyword.fetch(opts, :path)
+    {main_path, uid} = path
+    uid = to_string(uid)
 
     quote location: :keep do
-
       defstruct \
-        client:     nil,
+        client: nil,
         attributes: %{}
 
       alias __MODULE__, as: TheModule
@@ -26,6 +27,16 @@ defmodule M2X.Resource do
       end
 
       @main_path unquote(main_path)
+
+      @doc """
+        Return the API path of the Resource.
+      """
+      def path(%TheModule { attributes: %{ unquote(uid)=>uid } }) do
+        path(uid)
+      end
+      def path(uid) when is_binary(uid) do
+        @main_path<>"/"<>uid
+      end
 
       @doc """
         Create a new resource using the given client and optional params,

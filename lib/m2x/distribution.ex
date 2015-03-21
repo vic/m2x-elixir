@@ -3,13 +3,7 @@ defmodule M2X.Distribution do
     Wrapper for the AT&T M2X Distribution API.
     https://m2x.att.com/developer/documentation/v2/distribution
   """
-  use M2X.Resource, main_path: "/distributions"
-
-  @doc """
-    Return the API path of the given Distribution or id.
-  """
-  def path(%M2X.Distribution { attributes: %{ "id"=>id } }) do path(id) end
-  def path(id) when is_binary(id) do @main_path<>"/"<>id end
+  use M2X.Resource, path: {"/distributions", :id}
 
   @doc """
     Retrieve a view of the Distribution associated with the given unique id.
