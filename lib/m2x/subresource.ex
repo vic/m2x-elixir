@@ -3,8 +3,7 @@ defmodule M2X.Subresource do
     Common behaviour module for M2X Subresources.
   """
   defmacro __using__(opts) do
-    {:ok, path}  = Keyword.fetch(opts, :path)
-    {:ok, under} = Keyword.fetch(opts, :under)
+    {:ok, path} = Keyword.fetch(opts, :path)
     {main_path, uid} = path
     uid = to_string(uid)
 
@@ -15,7 +14,6 @@ defmodule M2X.Subresource do
         under: nil
 
       alias __MODULE__,     as: TheModule
-      alias unquote(under), as: ParentModule
 
       # Implement Access protocol to delegate struct[key] to struct.attributes[key]
       defimpl Access, for: TheModule do

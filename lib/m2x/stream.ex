@@ -3,7 +3,7 @@ defmodule M2X.Stream do
     Wrapper for the AT&T M2X Device Streams API.
     https://m2x.att.com/developer/documentation/v2/device
   """
-  use M2X.Subresource, path: {"/streams", :name}, under: M2X.Device
+  use M2X.Subresource, path: {"/streams", :name}
 
   @doc """
     List values from the Stream matching the given optional search parameters.
