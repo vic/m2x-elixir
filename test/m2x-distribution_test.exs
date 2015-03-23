@@ -17,6 +17,16 @@ defmodule M2X.DistributionTest do
     %{ "id"=>id, "name"=>"test", "visibility"=>"public", "description"=>"foo" }
   end
 
+  def test_sub do
+    Enum.at(test_sublist, 0)
+  end
+
+  def test_sublist do
+    [ %{ "id"=>"a123", "name"=>"test" },
+      %{ "id"=>"b123", "name"=>"test" },
+      %{ "id"=>"c123", "name"=>"test" } ]
+  end
+
   test "fetch" do
     client = MockEngine.client \
       {:get, "/v2/distributions/"<>id, nil},
@@ -87,6 +97,49 @@ defmodule M2X.DistributionTest do
     %M2X.Device { } = device
     assert device.client == subject.client
     assert device.attributes == test_attributes
+  end
+
+  test "triggers" do
+    subject = mock_subject \
+      {:get, "/v2/distributions/"<>id<>"/triggers", nil},
+      {200, %{ "triggers"=>test_sublist }}
+
+    triggers = M2X.Distribution.triggers(subject)
+
+    for trigger = %M2X.Trigger{} <- triggers do
+      assert trigger.client == subject.client
+      assert trigger.under == "/distributions/"<>id
+    end
+    assert Enum.at(triggers, 0).attributes == Enum.at(test_sublist, 0)
+    assert Enum.at(triggers, 1).attributes == Enum.at(test_sublist, 1)
+    assert Enum.at(triggers, 2).attributes == Enum.at(test_sublist, 2)
+  end
+
+  test "trigger" do
+    subject = mock_subject \
+      {:get, "/v2/distributions/"<>id<>"/triggers/"<>test_sub["id"], nil},
+      {200, test_sub}
+
+    trigger = M2X.Distribution.trigger(subject, test_sub["id"])
+
+    %M2X.Trigger{} = trigger
+    assert trigger.client == subject.client
+    assert trigger.under == "/distributions/"<>id
+    assert trigger.attributes == test_sub
+  end
+
+  test "create_trigger" do
+    create_attrs = %{ "id"=>test_sub["id"] }
+    subject = mock_subject \
+      {:post, "/v2/distributions/"<>id<>"/triggers", create_attrs},
+      {201, test_sub}
+
+    trigger = M2X.Distribution.create_trigger(subject, create_attrs)
+
+    %M2X.Trigger{} = trigger
+    assert trigger.client == subject.client
+    assert trigger.under == "/distributions/"<>id
+    assert trigger.attributes == test_sub
   end
 
 end

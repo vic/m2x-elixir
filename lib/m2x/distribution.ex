@@ -51,4 +51,37 @@ defmodule M2X.Distribution do
     res.success? and %M2X.Device { client: client, attributes: res.json }
   end
 
+  @doc """
+    Retrieve list of Triggers associated with the specified Distribution.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#List-Triggers
+  """
+  def triggers(dist = %M2X.Distribution { client: client }) do
+    res = M2X.Client.get(client, path(dist)<>"/triggers")
+    res.success? and Enum.map res.json["triggers"], fn (attributes) ->
+      %M2X.Trigger { client: client, attributes: attributes, under: path(dist) }
+    end
+  end
+
+  @doc """
+    Get details of a specific Trigger associated with the Distribution.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#View-Trigger
+  """
+  def trigger(dist = %M2X.Distribution { client: client }, id) do
+    M2X.Trigger.refreshed %M2X.Trigger {
+      client: client, under: path(dist), attributes: %{ "id"=>id }
+    }
+  end
+
+  @doc """
+    Create a new Trigger with the given parameters associated with the Distribution.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#Create-Trigger
+  """
+  def create_trigger(dist = %M2X.Distribution { client: client }, params) do
+    res = M2X.Client.post(client, path(dist)<>"/triggers", params)
+    res.success? and %M2X.Trigger { client: client, attributes: res.json, under: path(dist) }
+  end
+
 end
