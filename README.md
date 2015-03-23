@@ -73,7 +73,7 @@ res = M2X.Client.post(client, "/some/other_path", %{ "foo"=>"bar" })
 
 ## Versioning
 
-This gem aims to adhere to [Semantic Versioning 2.0.0](http://semver.org/). As a summary, given a version number `MAJOR.MINOR.PATCH`:
+This library aims to adhere to [Semantic Versioning 2.0.0](http://semver.org/). As a summary, given a version number `MAJOR.MINOR.PATCH`:
 
 1. `MAJOR` will increment when backwards-incompatible changes are introduced to the client.
 2. `MINOR` will increment when backwards-compatible functionality is added.
@@ -85,4 +85,4 @@ Additional labels for pre-release and build metadata are available as extensions
 
 ## License
 
-This gem is provided under the MIT license. See [LICENSE](LICENSE) for applicable terms.
+This library is provided under the MIT license. See [LICENSE](LICENSE) for applicable terms.
