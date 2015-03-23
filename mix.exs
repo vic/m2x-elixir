@@ -1,9 +1,11 @@
 defmodule M2X.Mixfile do
   use Mix.Project
 
+  def version, do: "0.0.1"
+
   def project do
     [ app:     :m2x,
-      version: "0.0.1",
+      version: version,
       elixir:  "~> 1.0",
       deps:    deps ]
   end
