@@ -13,7 +13,7 @@ defmodule M2X.Subresource do
         attributes: %{},
         under: nil
 
-      alias __MODULE__,     as: TheModule
+      alias __MODULE__, as: TheModule
 
       # Implement Access protocol to delegate struct[key] to struct.attributes[key]
       defimpl Access, for: TheModule do

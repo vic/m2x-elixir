@@ -64,7 +64,7 @@ defmodule M2X.SubresourceTest.Common do
   end
 end
 
-defmodule M2X.SubresourceTest.Stream do
+defmodule M2X.SubresourceTest.Device.Stream do
   use ExUnit.Case
   use M2X.SubresourceTest.Common, mod: M2X.Stream, under: M2X.Device
   doctest M2X.Stream
@@ -75,4 +75,30 @@ defmodule M2X.SubresourceTest.Stream do
   def main_path      do "/v2"<>under_path<>"/streams"         end
   def path           do main_path<>"/"<>name                  end
   def required_attrs do %{ "name" => name }                   end
+end
+
+defmodule M2X.SubresourceTest.Device.Trigger do
+  use ExUnit.Case
+  use M2X.SubresourceTest.Common, mod: M2X.Trigger, under: M2X.Device
+  doctest M2X.Trigger
+
+  def id             do "1234"                                end
+  def device_id      do "0123456789abcdef0123456789abcdef"    end
+  def under_path     do "/devices/"<>device_id                end
+  def main_path      do "/v2"<>under_path<>"/triggers"        end
+  def path           do main_path<>"/"<>id                    end
+  def required_attrs do %{ "id" => id }                       end
+end
+
+defmodule M2X.SubresourceTest.Distribution.Trigger do
+  use ExUnit.Case
+  use M2X.SubresourceTest.Common, mod: M2X.Trigger, under: M2X.Distribution
+  doctest M2X.Trigger
+
+  def id             do "1234"                                end
+  def dist_id        do "0123456789abcdef0123456789abcdef"    end
+  def under_path     do "/distributions/"<>dist_id            end
+  def main_path      do "/v2"<>under_path<>"/triggers"        end
+  def path           do main_path<>"/"<>id                    end
+  def required_attrs do %{ "id" => id }                       end
 end
