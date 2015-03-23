@@ -78,4 +78,73 @@ defmodule M2X.Device do
     M2X.Client.post(client, path(device)<>"/updates", params)
   end
 
+  @doc """
+    Retrieve list of Streams associated with the specified Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams
+  """
+  def streams(device = %M2X.Device { client: client }) do
+    res = M2X.Client.get(client, path(device)<>"/streams")
+    res.success? and Enum.map res.json["streams"], fn (attributes) ->
+      %M2X.Stream { client: client, attributes: attributes, under: path(device) }
+    end
+  end
+
+  @doc """
+    Get details of a specific Stream associated with the Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#View-Data-Stream
+  """
+  def stream(device = %M2X.Device { client: client }, name) do
+    M2X.Stream.refreshed %M2X.Stream {
+      client: client, under: path(device), attributes: %{ "name"=>name }
+    }
+  end
+
+  @doc """
+    Update a Stream associated with the Device with the given parameters.
+    If a Stream with this name does not exist it will be created.
+
+    https://m2x.att.com/developer/documentation/v2/device#Create-Update-Data-Stream
+  """
+  def update_stream(device = %M2X.Device { client: client }, name, params) do
+    M2X.Stream.update! %M2X.Stream {
+      client: client, under: path(device), attributes: %{ "name"=>name }
+    }, params
+  end
+  def create_stream(a,b,c) do update_stream(a,b,c) end # Alias
+
+  @doc """
+    Retrieve list of Triggers associated with the specified Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#List-Triggers
+  """
+  def triggers(device = %M2X.Device { client: client }) do
+    res = M2X.Client.get(client, path(device)<>"/triggers")
+    res.success? and Enum.map res.json["triggers"], fn (attributes) ->
+      %M2X.Trigger { client: client, attributes: attributes, under: path(device) }
+    end
+  end
+
+  @doc """
+    Get details of a specific Trigger associated with the Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#View-Trigger
+  """
+  def trigger(device = %M2X.Device { client: client }, id) do
+    M2X.Trigger.refreshed %M2X.Trigger {
+      client: client, under: path(device), attributes: %{ "id"=>id }
+    }
+  end
+
+  @doc """
+    Create a new Trigger with the given parameters associated with the Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#Create-Trigger
+  """
+  def create_trigger(device = %M2X.Device { client: client }, params) do
+    res = M2X.Client.post(client, path(device)<>"/triggers", params)
+    res.success? and %M2X.Trigger { client: client, attributes: res.json, under: path(device) }
+  end
+
 end

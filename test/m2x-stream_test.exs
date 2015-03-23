@@ -6,7 +6,7 @@ defmodule M2X.StreamTest do
     %M2X.Stream {
       client: MockEngine.client(request, response),
       attributes: test_attributes,
-      under: "devices/"<>device_id,
+      under: "/devices/"<>device_id,
     }
   end
 

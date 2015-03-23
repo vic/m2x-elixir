@@ -21,6 +21,16 @@ defmodule M2X.DeviceTest do
     %{ "latitude"=>-37.978842356, "longitude"=>-57.547877691, "elevation"=>5 }
   end
 
+  def test_sub do
+    Enum.at(test_sublist, 0)
+  end
+
+  def test_sublist do
+    [ %{ "id"=>"a123", "name"=>"test" },
+      %{ "id"=>"b123", "name"=>"test" },
+      %{ "id"=>"c123", "name"=>"test" } ]
+  end
+
   test "fetch" do
     client = MockEngine.client \
       {:get, "/v2/devices/"<>id, nil},
@@ -92,6 +102,91 @@ defmodule M2X.DeviceTest do
       {202, nil}
 
     assert M2X.Device.post_updates(subject, params).status == 202
+  end
+
+  test "streams" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/streams", nil},
+      {200, %{ "streams"=>test_sublist }}
+
+    streams = M2X.Device.streams(subject)
+
+    for stream = %M2X.Stream{} <- streams do
+      assert stream.client == subject.client
+      assert stream.under == "/devices/"<>id
+    end
+    assert Enum.at(streams, 0).attributes == Enum.at(test_sublist, 0)
+    assert Enum.at(streams, 1).attributes == Enum.at(test_sublist, 1)
+    assert Enum.at(streams, 2).attributes == Enum.at(test_sublist, 2)
+  end
+
+  test "stream" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/streams/"<>test_sub["name"], nil},
+      {200, test_sub}
+
+    stream = M2X.Device.stream(subject, test_sub["name"])
+
+    %M2X.Stream{} = stream
+    assert stream.client == subject.client
+    assert stream.under == "/devices/"<>id
+    assert stream.attributes == test_sub
+  end
+
+  test "update_stream, create_stream" do
+    update_attrs = %{ "foo"=>"bar" }
+    subject = mock_subject \
+      {:put, "/v2/devices/"<>id<>"/streams/"<>test_sub["name"], update_attrs},
+      {204, nil}
+    assert M2X.Device.update_stream(subject, test_sub["name"], update_attrs).success?
+
+    subject = mock_subject \
+      {:put, "/v2/devices/"<>id<>"/streams/"<>test_sub["name"], update_attrs},
+      {204, nil}
+    assert M2X.Device.create_stream(subject, test_sub["name"], update_attrs).success?
+  end
+
+  test "triggers" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/triggers", nil},
+      {200, %{ "triggers"=>test_sublist }}
+
+    triggers = M2X.Device.triggers(subject)
+
+    for trigger = %M2X.Trigger{} <- triggers do
+      assert trigger.client == subject.client
+      assert trigger.under == "/devices/"<>id
+    end
+    assert Enum.at(triggers, 0).attributes == Enum.at(test_sublist, 0)
+    assert Enum.at(triggers, 1).attributes == Enum.at(test_sublist, 1)
+    assert Enum.at(triggers, 2).attributes == Enum.at(test_sublist, 2)
+  end
+
+  test "trigger" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/triggers/"<>test_sub["id"], nil},
+      {200, test_sub}
+
+    trigger = M2X.Device.trigger(subject, test_sub["id"])
+
+    %M2X.Trigger{} = trigger
+    assert trigger.client == subject.client
+    assert trigger.under == "/devices/"<>id
+    assert trigger.attributes == test_sub
+  end
+
+  test "create_trigger" do
+    create_attrs = %{ "id"=>test_sub["id"] }
+    subject = mock_subject \
+      {:post, "/v2/devices/"<>id<>"/triggers", create_attrs},
+      {201, test_sub}
+
+    trigger = M2X.Device.create_trigger(subject, create_attrs)
+
+    %M2X.Trigger{} = trigger
+    assert trigger.client == subject.client
+    assert trigger.under == "/devices/"<>id
+    assert trigger.attributes == test_sub
   end
 
 end
