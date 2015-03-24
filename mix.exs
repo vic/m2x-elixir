@@ -21,10 +21,10 @@ defmodule M2X.Mixfile do
 
   defp description do
     """
-    Elixir client library for the [AT&T M2X](http://m2x.att.com) API.
-    [AT&T M2X](http://m2x.att.com) is a cloud-based fully managed
-    time-series data storage service for network connected
-    machine-to-machine (M2M) devices and the Internet of Things (IoT).
+    Elixir client library for the AT&T M2X (http://m2x.att.com) API.
+    AT&T M2X is a cloud-based fully managed time-series data storage service
+    for network connected machine-to-machine (M2M) devices and the
+    Internet of Things (IoT).
     """
   end
 
