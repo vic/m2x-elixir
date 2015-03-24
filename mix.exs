@@ -32,7 +32,7 @@ defmodule M2X.Mixfile do
     [ contributors: ["Joe McIlvain"],
       licenses:     ["MIT"],
       links: %{
-        "GitHub"   => "https://github.com/ericmj/postgrex",
+        "GitHub"   => "https://github.com/attm2x/m2x-elixir",
         "API Docs" => "https://m2x.att.com/developer/documentation"
       } ]
   end
