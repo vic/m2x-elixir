@@ -12,7 +12,9 @@ defmodule M2X.Client do
       {maj,min,rel} -> to_string(maj)<>"."<>to_string(min)<>"."<>to_string(rel)
       string        -> to_string(string)
     end
-    "M2X-Elixir/" <> version <> " elixir/" <> System.version <> \
+    "M2X-Elixir/" <> version <> \
+     " elixir/" <> System.version <> \
+     " erlang/" <> to_string(:erlang.system_info(:otp_release)) <> \
       " (" <> os_family <> ":" <> os_name <> " " <> os_version <> ")"
   end
 

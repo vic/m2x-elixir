@@ -3,7 +3,7 @@ defmodule M2X.ClientTest do
   doctest M2X.Client
 
   test "user_agent" do
-    assert Regex.match? ~r"\AM2X-Elixir/\S+ elixir/\S+ \(.*\)",
+    assert Regex.match? ~r"\AM2X-Elixir/\S+ elixir/\S+ erlang/\S+ \(.*\)",
       M2X.Client.user_agent
   end
 
