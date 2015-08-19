@@ -85,6 +85,15 @@ defmodule M2X.Device do
   end
 
   @doc """
+    Export values from all data streams of a Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#Export-Values-from-all-Data-Streams-of-a-Device
+  """
+  def values_export_csv(device = %M2X.Device { client: client }, params\\%{}) do
+    M2X.Client.get(client, path(device)<>"/values/export.csv", params)
+  end
+
+  @doc """
     Post Device Update (Single Values to Multiple Streams)
 
     This method allows posting single values to multiple streams.

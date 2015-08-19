@@ -104,6 +104,22 @@ defmodule M2X.DeviceTest do
       %{ "values" => test_sublist }
   end
 
+  test "values_export_csv/1" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/values/export.csv", %{}},
+      {202, nil}
+
+    assert M2X.Device.values_export_csv(subject).status == 202
+  end
+
+  test "values_export_csv/2" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/values/export.csv", test_attributes},
+      {202, nil}
+
+    assert M2X.Device.values_export_csv(subject, test_attributes).status == 202
+  end
+
   test "post_update" do
     params = %{
       timestamp: "2014-09-09T20:15:00.124Z",
