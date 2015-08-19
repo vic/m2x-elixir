@@ -67,6 +67,24 @@ defmodule M2X.Device do
   end
 
   @doc """
+    List values from all data streams of a Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#List-Values-from-all-Data-Streams-of-a-Device
+  """
+  def values(device = %M2X.Device { client: client }, params) do
+    M2X.Client.get(client, path(device)<>"/values", params)
+  end
+
+  @doc """
+    Search values from all data streams of a Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#Search-Values-from-all-Data-Streams-of-a-Device
+  """
+  def values_search(device = %M2X.Device { client: client }, params) do
+    M2X.Client.get(client, path(device)<>"/values/search", params)
+  end
+
+  @doc """
     Post Device Update (Single Values to Multiple Streams)
 
     This method allows posting single values to multiple streams.

@@ -86,6 +86,24 @@ defmodule M2X.DeviceTest do
     assert M2X.Device.update_location(subject, test_location).status == 202
   end
 
+  test "values" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/values", test_attributes},
+      {200, %{ "values" => test_sublist }}
+
+    assert M2X.Device.values(subject, test_attributes).json == \
+      %{ "values" => test_sublist }
+  end
+
+  test "values_search" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/values/search", test_attributes},
+      {200, %{ "values" => test_sublist }}
+
+    assert M2X.Device.values_search(subject, test_attributes).json == \
+      %{ "values" => test_sublist }
+  end
+
   test "post_update" do
     params = %{
       timestamp: "2014-09-09T20:15:00.124Z",
