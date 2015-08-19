@@ -50,6 +50,12 @@ The `M2X.Client` struct can be passed to functions that fetch existing remote re
   #=> %M2X.Key { ... }
   ```
 
+- [M2X.Job](lib/m2x/job.ex)
+  ```elixir
+  key = M2X.Job.fetch(client, "<JOB-ID>")
+  #=> %M2X.Job { ... }
+  ```
+
 - [M2X.Stream](lib/m2x/stream.ex)
   ```elixir
   device = M2X.Device.fetch(client, "<DEVICE-ID>")
