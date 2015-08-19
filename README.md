@@ -38,6 +38,12 @@ The `M2X.Client` struct can be passed to functions that fetch existing remote re
   #=> %M2X.Distribution { ... }
   ```
 
+- [M2X.Collection](lib/m2x/collection.ex)
+  ```elixir
+  collections = M2X.Collection.fetch(client, "<COLLECTION-ID>")
+  #=> %M2X.Collection { ... }
+  ```
+
 - [M2X.Key](lib/m2x/key.ex)
   ```elixir
   key = M2X.Key.fetch(client, "<KEY-ID>")

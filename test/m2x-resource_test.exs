@@ -104,6 +104,17 @@ defmodule M2X.ResourceTest.Distribution do
   def required_attrs do %{ "id" => id }                    end
 end
 
+defmodule M2X.ResourceTest.Collection do
+  use ExUnit.Case
+  use M2X.ResourceTest.Common, mod: M2X.Collection
+  doctest M2X.Collection
+
+  def id             do "0123456789abcdef0123456789abcdef" end
+  def main_path      do "/v2/collections"                  end
+  def path           do main_path<>"/"<>id                 end
+  def required_attrs do %{ "id" => id }                    end
+end
+
 defmodule M2X.ResourceTest.Key do
   use ExUnit.Case
   use M2X.ResourceTest.Common, mod: M2X.Key
