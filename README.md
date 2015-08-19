@@ -63,14 +63,14 @@ The `M2X.Client` struct can be passed to functions that fetch existing remote re
   #=> %M2X.Stream { ... }
   ```
 
-The `M2X.Client` struct can also be passed to REST methods to directly access any M2X API endpoint and get an `M2X.Response` struct in return:
+The `M2X.Client` struct can also be passed to REST methods to directly access any M2X API endpoint and get an `M2X.Client.Response` struct in return:
 
-[M2X.Response](lib/m2x/response.ex)
+[M2X.Client.Response](lib/m2x/response.ex)
 ```elixir
 res = M2X.Client.get(client, "/some_path")
-#=> %M2X.Response { ... }
+#=> %M2X.Client.Response { ... }
 res = M2X.Client.post(client, "/some/other_path", %{ "foo"=>"bar" })
-#=> %M2X.Response { ... }
+#=> %M2X.Client.Response { ... }
 ```
 
 ## Versioning
