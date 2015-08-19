@@ -67,6 +67,17 @@ defmodule M2X.Device do
   end
 
   @doc """
+    Post Device Update (Single Values to Multiple Streams)
+
+    This method allows posting single values to multiple streams.
+
+    https://m2x.att.com/developer/documentation/v2/device#Post-Device-Update--Single-Values-to-Multiple-Streams-
+  """
+  def post_update(device = %M2X.Device { client: client }, params) do
+    M2X.Client.post(client, path(device)<>"/update", params)
+  end
+
+  @doc """
     Post Device Updates (Multiple Values to Multiple Streams)
 
     This method allows posting multiple values to multiple streams

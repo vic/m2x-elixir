@@ -86,6 +86,21 @@ defmodule M2X.DeviceTest do
     assert M2X.Device.update_location(subject, test_location).status == 202
   end
 
+  test "post_update" do
+    params = %{
+      timestamp: "2014-09-09T20:15:00.124Z",
+      values: %{
+        temperature: 32,
+        humidity: 88
+      }
+    }
+    subject = mock_subject \
+      {:post, "/v2/devices/"<>id<>"/update", params},
+      {202, nil}
+
+    assert M2X.Device.post_update(subject, params).status == 202
+  end
+
   test "post_updates" do
     params = %{ values: %{
       temperature: [
