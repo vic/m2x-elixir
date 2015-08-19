@@ -1,7 +1,7 @@
 defmodule M2X.Mixfile do
   use Mix.Project
 
-  def version, do: "0.0.2" # Version number must also be updated in client.ex
+  def version, do: "1.0.0" # Version number must also be updated in client.ex
 
   def project do
     [ app:         :m2x,
