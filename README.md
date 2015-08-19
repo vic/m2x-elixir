@@ -51,16 +51,6 @@ The `M2X.Client` struct can be passed to functions that fetch existing remote re
   #=> %M2X.Stream { ... }
   ```
 
-- [M2X.Trigger](lib/m2x/trigger.ex)
-  ```elixir
-  device  = M2X.Device.fetch(client, "<DEVICE-ID>")
-  trigger = M2X.Device.trigger(device, "<TRIGGER-ID>")
-  #=> %M2X.Trigger { ... }
-  distribution = M2X.Distribution.fetch(client, "<DISTRIBUTION-ID>")
-  dist_trigger = M2X.Distribution.trigger(device, "<TRIGGER-ID>")
-  #=> %M2X.Trigger { ... }
-  ```
-
 The `M2X.Client` struct can also be passed to REST methods to directly access any M2X API endpoint and get an `M2X.Response` struct in return:
 
 [M2X.Response](lib/m2x/response.ex)

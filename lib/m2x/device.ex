@@ -114,37 +114,4 @@ defmodule M2X.Device do
   end
   def create_stream(a,b,c) do update_stream(a,b,c) end # Alias
 
-  @doc """
-    Retrieve list of Triggers associated with the specified Device.
-
-    https://m2x.att.com/developer/documentation/v2/device#List-Triggers
-  """
-  def triggers(device = %M2X.Device { client: client }) do
-    res = M2X.Client.get(client, path(device)<>"/triggers")
-    res.success? and Enum.map res.json["triggers"], fn (attributes) ->
-      %M2X.Trigger { client: client, attributes: attributes, under: path(device) }
-    end
-  end
-
-  @doc """
-    Get details of a specific Trigger associated with the Device.
-
-    https://m2x.att.com/developer/documentation/v2/device#View-Trigger
-  """
-  def trigger(device = %M2X.Device { client: client }, id) do
-    M2X.Trigger.refreshed %M2X.Trigger {
-      client: client, under: path(device), attributes: %{ "id"=>id }
-    }
-  end
-
-  @doc """
-    Create a new Trigger with the given parameters associated with the Device.
-
-    https://m2x.att.com/developer/documentation/v2/device#Create-Trigger
-  """
-  def create_trigger(device = %M2X.Device { client: client }, params) do
-    res = M2X.Client.post(client, path(device)<>"/triggers", params)
-    res.success? and %M2X.Trigger { client: client, attributes: res.json, under: path(device) }
-  end
-
 end
