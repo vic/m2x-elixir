@@ -52,14 +52,18 @@ defmodule M2X.DeviceTest do
     ]}
     client   = MockEngine.client({:get, "/v2/devices", nil}, {200, result})
     list     = M2X.Device.list(client)
+    client   = MockEngine.client({:get, "/v2/devices/search", nil}, {200, result})
+    search   = M2X.Device.search(client)
     client   = MockEngine.client({:get, "/v2/devices/catalog", nil}, {200, result})
     catalog  = M2X.Device.catalog(client)
     client   = MockEngine.client({:get, "/v2/devices", params}, {200, result})
     list2    = M2X.Device.list(client, params)
+    client   = MockEngine.client({:get, "/v2/devices/search", params}, {200, result})
+    search2  = M2X.Device.search(client, params)
     client   = MockEngine.client({:get, "/v2/devices/catalog", params}, {200, result})
     catalog2 = M2X.Device.catalog(client, params)
 
-    for list <- [list, catalog, list2, catalog2] do
+    for list <- [list, search, catalog, list2, search2, catalog2] do
       for subject = %M2X.Device{} <- list do
         assert subject.client == client
         assert subject["name"] == "test"

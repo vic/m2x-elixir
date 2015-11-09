@@ -16,13 +16,25 @@ defmodule M2X.Device do
   end
 
   @doc """
-    Retrieve the list of Devices accessible by the authenticated API key that
-    meet the search criteria.
+    Retrieve the list of Devices accessible by the authenticated API key.
 
-    https://m2x.att.com/developer/documentation/v2/device#List-Search-Devices
+    https://m2x.att.com/developer/documentation/v2/device#List-Devices
   """
   def list(client = %M2X.Client{}, params\\nil) do
     res = M2X.Client.get(client, @main_path, params)
+    res.success? and Enum.map res.json["devices"], fn (attributes) ->
+      %M2X.Device { client: client, attributes: attributes }
+    end
+  end
+
+  @doc """
+    Retrieve the list of Devices accessible by the authenticated API key that
+    meet the search criteria.
+
+    https://m2x.att.com/developer/documentation/v2/device#Search-Devices
+  """
+  def search(client = %M2X.Client{}, params\\nil) do
+    res = M2X.Client.get(client, @main_path<>"/search", params)
     res.success? and Enum.map res.json["devices"], fn (attributes) ->
       %M2X.Device { client: client, attributes: attributes }
     end
