@@ -3,11 +3,7 @@ defmodule M2X.Job do
     Wrapper for the AT&T M2X Jobs API.
     https://m2x.att.com/developer/documentation/v2/jobs
   """
-  defstruct \
-    client: nil,
-    attributes: %{}
-
-  @main_path "/jobs"
+  use M2X.BareResource, path: {"/jobs", :job}
 
   @doc """
     Return the API path of the Resource.
