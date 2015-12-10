@@ -30,7 +30,7 @@ defmodule M2X.CollectionTest do
   test "fetch" do
     client = MockEngine.client \
       {:get, "/v2/collections/"<>id, nil},
-      {200, test_attributes}
+      {200, test_attributes, nil}
     subject = M2X.Collection.fetch(client, id)
 
     %M2X.Collection { } = subject
@@ -46,9 +46,9 @@ defmodule M2X.CollectionTest do
       %{ id: "b"<>suffix, name: "test", description: "bar" },
       %{ id: "c"<>suffix, name: "test", description: "baz" },
     ]}
-    client = MockEngine.client({:get, "/v2/collections", nil}, {200, result})
+    client = MockEngine.client({:get, "/v2/collections", nil}, {200, result, nil})
     list   = M2X.Collection.list(client)
-    client = MockEngine.client({:get, "/v2/collections", params}, {200, result})
+    client = MockEngine.client({:get, "/v2/collections", params}, {200, result, nil})
     list2  = M2X.Collection.list(client, params)
 
     for list <- [list, list2] do

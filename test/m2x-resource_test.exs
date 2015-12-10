@@ -34,7 +34,7 @@ defmodule M2X.ResourceTest.Common do
       test "create!/1" do
         client = MockEngine.client \
           {:post, main_path, %{}},
-          {204, new_test_attributes}
+          {204, new_test_attributes, nil}
         subject = TheModule.create!(client)
 
         assert subject.client     == client
@@ -44,7 +44,7 @@ defmodule M2X.ResourceTest.Common do
       test "create!/2" do
         client = MockEngine.client \
           {:post, main_path, test_attributes},
-          {204, new_test_attributes}
+          {204, new_test_attributes, nil}
         subject = TheModule.create!(client, test_attributes)
 
         %TheModule { } = subject
@@ -55,7 +55,7 @@ defmodule M2X.ResourceTest.Common do
       test "refreshed" do
         subject = mock_subject \
           {:get, path, nil},
-          {200, new_test_attributes}
+          {200, new_test_attributes, nil}
         assert subject.attributes == test_attributes
         new_subject = TheModule.refreshed(subject)
 
@@ -67,14 +67,14 @@ defmodule M2X.ResourceTest.Common do
       test "update!" do
         subject = mock_subject \
           {:put, path, new_test_attributes},
-          {204, nil}
+          {204, nil, nil}
         assert TheModule.update!(subject, new_test_attributes).success?
       end
 
       test "delete!" do
         subject = mock_subject \
           {:delete, path, nil},
-          {204, nil}
+          {204, nil, nil}
         assert TheModule.delete!(subject).success?
       end
 

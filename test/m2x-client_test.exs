@@ -33,7 +33,7 @@ defmodule M2X.ClientTest do
   test "get /status from mock service" do
     subject = MockEngine.client(
       {:get, "/v2/status", nil},
-      {200, %{ api: "OK", triggers: "OK" }}
+      {200, %{ api: "OK", triggers: "OK" }, nil}
     )
     res = M2X.Client.get(subject, "/status")
 

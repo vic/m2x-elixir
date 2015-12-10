@@ -30,7 +30,7 @@ defmodule M2X.DistributionTest do
   test "fetch" do
     client = MockEngine.client \
       {:get, "/v2/distributions/"<>id, nil},
-      {200, test_attributes}
+      {200, test_attributes, nil}
     subject = M2X.Distribution.fetch(client, id)
 
     %M2X.Distribution { } = subject
@@ -46,9 +46,9 @@ defmodule M2X.DistributionTest do
       %{ id: "b"<>suffix, name: "test", description: "bar" },
       %{ id: "c"<>suffix, name: "test", description: "baz" },
     ]}
-    client = MockEngine.client({:get, "/v2/distributions", nil}, {200, result})
+    client = MockEngine.client({:get, "/v2/distributions", nil}, {200, result, nil})
     list   = M2X.Distribution.list(client)
-    client = MockEngine.client({:get, "/v2/distributions", params}, {200, result})
+    client = MockEngine.client({:get, "/v2/distributions", params}, {200, result, nil})
     list2  = M2X.Distribution.list(client, params)
 
     for list <- [list, list2] do
@@ -70,9 +70,9 @@ defmodule M2X.DistributionTest do
       %{ id: "b"<>suffix, name: "test", description: "bar" },
       %{ id: "c"<>suffix, name: "test", description: "baz" },
     ]}
-    subject  = mock_subject {:get, "/v2/distributions/"<>id<>"/devices", nil}, {200, result}
+    subject  = mock_subject {:get, "/v2/distributions/"<>id<>"/devices", nil}, {200, result, nil}
     devices  = M2X.Distribution.devices(subject)
-    subject  = mock_subject {:get, "/v2/distributions/"<>id<>"/devices", params}, {200, result}
+    subject  = mock_subject {:get, "/v2/distributions/"<>id<>"/devices", params}, {200, result, nil}
     devices2 = M2X.Distribution.devices(subject, params)
 
     for devices <- [devices, devices2] do
@@ -91,7 +91,7 @@ defmodule M2X.DistributionTest do
     params = %{ "serial"=>serial }
     subject = mock_subject \
       {:post, "/v2/distributions/"<>id<>"/devices", params},
-      {200, test_attributes}
+      {200, test_attributes, nil}
     device = M2X.Distribution.add_device(subject, serial)
 
     %M2X.Device { } = device

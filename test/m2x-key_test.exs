@@ -20,7 +20,7 @@ defmodule M2X.KeyTest do
   test "fetch" do
     client = MockEngine.client \
       {:get, "/v2/keys/"<>key, nil},
-      {200, test_attributes}
+      {200, test_attributes, nil}
     subject = M2X.Key.fetch(client, key)
 
     %M2X.Key { } = subject
@@ -36,9 +36,9 @@ defmodule M2X.KeyTest do
       %{ key: "b"<>suffix, name: "test", master: false },
       %{ key: "c"<>suffix, name: "test", master: false },
     ]}
-    client = MockEngine.client({:get, "/v2/keys", nil}, {200, result})
+    client = MockEngine.client({:get, "/v2/keys", nil}, {200, result, nil})
     list   = M2X.Key.list(client)
-    client = MockEngine.client({:get, "/v2/keys", params}, {200, result})
+    client = MockEngine.client({:get, "/v2/keys", params}, {200, result, nil})
     list2  = M2X.Key.list(client, params)
 
     for list <- [list, list2] do
@@ -56,7 +56,7 @@ defmodule M2X.KeyTest do
     new_test_attributes = %{ test_attributes | "key"=>String.reverse(key) }
     subject = mock_subject \
       {:get, "/v2/keys/"<>key, nil},
-      {200, new_test_attributes}
+      {200, new_test_attributes, nil}
     assert subject.attributes == test_attributes
     new_subject = M2X.Key.regenerated(subject)
 

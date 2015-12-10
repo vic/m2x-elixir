@@ -34,7 +34,7 @@ defmodule M2X.DeviceTest do
   test "fetch" do
     client = MockEngine.client \
       {:get, "/v2/devices/"<>id, nil},
-      {200, test_attributes}
+      {200, test_attributes, nil}
     subject = M2X.Device.fetch(client, id)
 
     %M2X.Device { } = subject
@@ -50,17 +50,17 @@ defmodule M2X.DeviceTest do
       %{ id: "b"<>suffix, name: "test", description: "bar" },
       %{ id: "c"<>suffix, name: "test", description: "baz" },
     ]}
-    client   = MockEngine.client({:get, "/v2/devices", nil}, {200, result})
+    client   = MockEngine.client({:get, "/v2/devices", nil}, {200, result, nil})
     list     = M2X.Device.list(client)
-    client   = MockEngine.client({:get, "/v2/devices/search", nil}, {200, result})
+    client   = MockEngine.client({:get, "/v2/devices/search", nil}, {200, result, nil})
     search   = M2X.Device.search(client)
-    client   = MockEngine.client({:get, "/v2/devices/catalog", nil}, {200, result})
+    client   = MockEngine.client({:get, "/v2/devices/catalog", nil}, {200, result, nil})
     catalog  = M2X.Device.catalog(client)
-    client   = MockEngine.client({:get, "/v2/devices", params}, {200, result})
+    client   = MockEngine.client({:get, "/v2/devices", params}, {200, result, nil})
     list2    = M2X.Device.list(client, params)
-    client   = MockEngine.client({:get, "/v2/devices/search", params}, {200, result})
+    client   = MockEngine.client({:get, "/v2/devices/search", params}, {200, result, nil})
     search2  = M2X.Device.search(client, params)
-    client   = MockEngine.client({:get, "/v2/devices/catalog", params}, {200, result})
+    client   = MockEngine.client({:get, "/v2/devices/catalog", params}, {200, result, nil})
     catalog2 = M2X.Device.catalog(client, params)
 
     for list <- [list, search, catalog, list2, search2, catalog2] do
@@ -77,7 +77,7 @@ defmodule M2X.DeviceTest do
   test "get_location" do
     subject = mock_subject \
       {:get, "/v2/devices/"<>id<>"/location", nil},
-      {200, test_location}
+      {200, test_location, nil}
 
     assert M2X.Device.get_location(subject).json == test_location
   end
@@ -85,7 +85,7 @@ defmodule M2X.DeviceTest do
   test "update_location" do
     subject = mock_subject \
       {:put, "/v2/devices/"<>id<>"/location", test_location},
-      {202, nil}
+      {202, nil, nil}
 
     assert M2X.Device.update_location(subject, test_location).status == 202
   end
@@ -93,7 +93,7 @@ defmodule M2X.DeviceTest do
   test "values" do
     subject = mock_subject \
       {:get, "/v2/devices/"<>id<>"/values", test_attributes},
-      {200, %{ "values" => test_sublist }}
+      {200, %{ "values" => test_sublist }, nil}
 
     assert M2X.Device.values(subject, test_attributes).json == \
       %{ "values" => test_sublist }
@@ -102,7 +102,7 @@ defmodule M2X.DeviceTest do
   test "values_search" do
     subject = mock_subject \
       {:get, "/v2/devices/"<>id<>"/values/search", test_attributes},
-      {200, %{ "values" => test_sublist }}
+      {200, %{ "values" => test_sublist }, nil}
 
     assert M2X.Device.values_search(subject, test_attributes).json == \
       %{ "values" => test_sublist }
@@ -111,7 +111,7 @@ defmodule M2X.DeviceTest do
   test "values_export_csv/1" do
     subject = mock_subject \
       {:get, "/v2/devices/"<>id<>"/values/export.csv", %{}},
-      {202, nil}
+      {202, nil, nil}
 
     assert M2X.Device.values_export_csv(subject).status == 202
   end
@@ -119,7 +119,7 @@ defmodule M2X.DeviceTest do
   test "values_export_csv/2" do
     subject = mock_subject \
       {:get, "/v2/devices/"<>id<>"/values/export.csv", test_attributes},
-      {202, nil}
+      {202, nil, nil}
 
     assert M2X.Device.values_export_csv(subject, test_attributes).status == 202
   end
@@ -134,7 +134,7 @@ defmodule M2X.DeviceTest do
     }
     subject = mock_subject \
       {:post, "/v2/devices/"<>id<>"/update", params},
-      {202, nil}
+      {202, nil, nil}
 
     assert M2X.Device.post_update(subject, params).status == 202
   end
@@ -152,7 +152,7 @@ defmodule M2X.DeviceTest do
     }}
     subject = mock_subject \
       {:post, "/v2/devices/"<>id<>"/updates", params},
-      {202, nil}
+      {202, nil, nil}
 
     assert M2X.Device.post_updates(subject, params).status == 202
   end
@@ -160,7 +160,7 @@ defmodule M2X.DeviceTest do
   test "streams" do
     subject = mock_subject \
       {:get, "/v2/devices/"<>id<>"/streams", nil},
-      {200, %{ "streams"=>test_sublist }}
+      {200, %{ "streams"=>test_sublist }, nil}
 
     streams = M2X.Device.streams(subject)
 
@@ -176,7 +176,7 @@ defmodule M2X.DeviceTest do
   test "stream" do
     subject = mock_subject \
       {:get, "/v2/devices/"<>id<>"/streams/"<>test_sub["name"], nil},
-      {200, test_sub}
+      {200, test_sub, nil}
 
     stream = M2X.Device.stream(subject, test_sub["name"])
 
@@ -190,12 +190,12 @@ defmodule M2X.DeviceTest do
     update_attrs = %{ "foo"=>"bar" }
     subject = mock_subject \
       {:put, "/v2/devices/"<>id<>"/streams/"<>test_sub["name"], update_attrs},
-      {204, nil}
+      {204, nil, nil}
     assert M2X.Device.update_stream(subject, test_sub["name"], update_attrs).success?
 
     subject = mock_subject \
       {:put, "/v2/devices/"<>id<>"/streams/"<>test_sub["name"], update_attrs},
-      {204, nil}
+      {204, nil, nil}
     assert M2X.Device.create_stream(subject, test_sub["name"], update_attrs).success?
   end
 

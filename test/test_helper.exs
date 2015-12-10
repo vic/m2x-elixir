@@ -47,9 +47,16 @@ defmodule MockEngine do
     json
   end
 
-  def handle_call({:setup, client, {req_verb, req_path, req_params},
-                                   {res_status, res_params}}, _, state) do
+  def handle_call(
+    {:setup, client, {req_verb, req_path, req_params},
+                     {res_status, res_params, res_headers}}, _, state
+  ) do
     client = client || state.client
+    res_headers = Map.to_list(res_headers || %{})
+    if res_params do
+      res_headers = [{"Content-Type", "application/json"}] ++ res_headers
+    end
+
     {:reply, :ok, %State {
       ref:         make_ref,
       api_key:     client && client.api_key  || state.api_key,
@@ -59,7 +66,7 @@ defmodule MockEngine do
       req_body:    to_json(req_params),
       res_status:  res_status,
       res_body:    to_json(res_params),
-      res_headers: res_params && [{"Content-Type", "application/json"}] || []
+      res_headers: res_headers
     }}
   end
 
