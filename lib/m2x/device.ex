@@ -70,6 +70,15 @@ defmodule M2X.Device do
   end
 
   @doc """
+    Get location history details of an existing Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#Read-Device-Location-History
+  """
+  def location_history(device = %M2X.Device { client: client }, params\\%{}) do
+    M2X.Client.get(client, path(device)<>"/location/waypoints", params)
+  end
+
+  @doc """
     Update the current location of the specified device.
 
     https://m2x.att.com/developer/documentation/v2/device#Update-Device-Location

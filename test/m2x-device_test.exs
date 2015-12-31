@@ -18,7 +18,12 @@ defmodule M2X.DeviceTest do
   end
 
   def test_location do
-    %{ "latitude"=>-37.978842356, "longitude"=>-57.547877691, "elevation"=>5 }
+    Enum.at(test_locations, 0)
+  end
+
+  def test_locations do
+    [ %{ "latitude"=>-37.9788423, "longitude"=>-57.5478776, "elevation"=>5 },
+      %{ "latitude"=>-37.9788219, "longitude"=>-57.5478328, "elevation"=>9 } ]
   end
 
   def test_sub do
@@ -80,6 +85,16 @@ defmodule M2X.DeviceTest do
       {200, test_location, nil}
 
     assert M2X.Device.get_location(subject).json == test_location
+  end
+
+  test "location_history" do
+    params = %{ "limit" => 2 }
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/location/waypoints", params},
+      {200, %{ "waypoints" => test_locations }, nil}
+
+    assert M2X.Device.location_history(subject, params).json == \
+      %{ "waypoints" => test_locations }
   end
 
   test "update_location" do
