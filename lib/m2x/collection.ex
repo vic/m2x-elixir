@@ -16,6 +16,42 @@ defmodule M2X.Collection do
   end
 
   @doc """
+    Get the custom metadata for the specified Collection.
+
+    https://m2x.att.com/developer/documentation/v2/collections#Read-Collection-Metadata
+  """
+  def metadata(coll = %M2X.Collection { client: client }) do
+    M2X.Client.get(client, path(coll)<>"/metadata")
+  end
+
+  @doc """
+    Update the custom metadata for the specified Collection.
+
+    https://m2x.att.com/developer/documentation/v2/collections#Update-Collection-Metadata
+  """
+  def update_metadata(coll = %M2X.Collection { client: client }, params) do
+    M2X.Client.put(client, path(coll)<>"/metadata", params)
+  end
+
+  @doc """
+    Get the custom metadata for the specified Collection.
+
+    https://m2x.att.com/developer/documentation/v2/collections#Read-Collection-Metadata-Field
+  """
+  def get_metadata_field(coll = %M2X.Collection { client: client }, name) do
+    M2X.Client.get(client, path(coll)<>"/metadata/"<>name)
+  end
+
+  @doc """
+    Update the custom metadata for the specified Collection.
+
+    https://m2x.att.com/developer/documentation/v2/collections#Update-Collection-Metadata-Field
+  """
+  def set_metadata_field(coll = %M2X.Collection { client: client }, name, value) do
+    M2X.Client.put(client, path(coll)<>"/metadata/"<>name, %{ "value" => value })
+  end
+
+  @doc """
     Retrieve the list of Collections accessible by the authenticated API key
     that meet the search criteria.
 
