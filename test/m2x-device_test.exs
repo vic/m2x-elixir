@@ -199,4 +199,51 @@ defmodule M2X.DeviceTest do
     assert M2X.Device.create_stream(subject, test_sub["name"], update_attrs).success?
   end
 
+  test "commands" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/commands", nil},
+      {200, %{ "commands"=>test_sublist }, nil}
+
+    commands = M2X.Device.commands(subject)
+
+    for command = %M2X.Stream{} <- commands do
+      assert command.client == subject.client
+    end
+    assert Enum.at(commands, 0).attributes == Enum.at(test_sublist, 0)
+    assert Enum.at(commands, 1).attributes == Enum.at(test_sublist, 1)
+    assert Enum.at(commands, 2).attributes == Enum.at(test_sublist, 2)
+  end
+
+  test "command" do
+    subject = mock_subject \
+      {:get, "/v2/devices/"<>id<>"/commands/"<>test_sub["id"], nil},
+      {200, test_sub, nil}
+
+    command = M2X.Device.command(subject, test_sub["id"])
+
+    %M2X.Command{} = command
+    assert command.client == subject.client
+    assert command.attributes == test_sub
+  end
+
+  test "process_command" do
+    params = %{ foo: "abc", bar: "xyz" }
+    subject = mock_subject \
+      {:post, "/v2/devices/"<>id<>"/commands/"<>test_sub["id"]<>"/process", params},
+      {202, nil, nil}
+
+    command = %M2X.Command { attributes: test_sub }
+    assert M2X.Device.process_command(subject, command, params).status == 202
+  end
+
+  test "reject_command" do
+    params = %{ foo: "abc", bar: "xyz" }
+    subject = mock_subject \
+      {:post, "/v2/devices/"<>id<>"/commands/"<>test_sub["id"]<>"/reject", params},
+      {202, nil, nil}
+
+    command = %M2X.Command { attributes: test_sub }
+    assert M2X.Device.reject_command(subject, command, params).status == 202
+  end
+
 end

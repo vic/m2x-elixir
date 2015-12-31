@@ -164,4 +164,50 @@ defmodule M2X.Device do
   end
   def create_stream(a,b,c) do update_stream(a,b,c) end # Alias
 
+  @doc """
+    Retrieve the list of recent commands sent to the Device.
+
+    https://m2x.att.com/developer/documentation/v2/commands#Device-s-List-of-Received-Commands
+  """
+  def commands(device = %M2X.Device { client: client }) do
+    res = M2X.Client.get(client, path(device)<>"/commands")
+    res.success? and Enum.map res.json["commands"], fn (attributes) ->
+      %M2X.Command { client: client, attributes: attributes }
+    end
+  end
+
+  @doc """
+    Get details of a received command for this Device.
+
+    https://m2x.att.com/developer/documentation/v2/commands#Device-s-View-of-Command-Details
+  """
+  def command(device = %M2X.Device { client: client }, command_id) do
+    res = M2X.Client.get(client, path(device)<>"/commands/"<>command_id)
+    res.success? and %M2X.Command { client: client, attributes: res.json }
+  end
+
+  @doc """
+    Mark the given command as processed by this Device.
+
+    https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Processed
+  """
+  def process_command(device = %M2X.Device { client: client },
+                      %M2X.Command { attributes: %{ "id" => command_id } },
+                      params\\%{}) do
+    req_path = path(device)<>"/commands/"<>command_id<>"/process"
+    M2X.Client.post(client, req_path, params)
+  end
+
+  @doc """
+    Mark the given command as rejected by this Device.
+
+    https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Rejected
+  """
+  def reject_command(device = %M2X.Device { client: client },
+                     %M2X.Command { attributes: %{ "id" => command_id } },
+                     params\\%{}) do
+    req_path = path(device)<>"/commands/"<>command_id<>"/reject"
+    M2X.Client.post(client, req_path, params)
+  end
+
 end
