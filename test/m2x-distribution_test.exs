@@ -38,6 +38,38 @@ defmodule M2X.DistributionTest do
     assert subject.attributes == test_attributes
   end
 
+  test "metadata" do
+    subject = mock_subject \
+      {:get, "/v2/distributions/"<>id<>"/metadata", nil},
+      {200, test_sub, nil}
+
+    assert M2X.Distribution.metadata(subject).json == test_sub
+  end
+
+  test "update_metadata" do
+    subject = mock_subject \
+      {:put, "/v2/distributions/"<>id<>"/metadata", test_sub},
+      {202, nil, nil}
+
+    assert M2X.Distribution.update_metadata(subject, test_sub).status == 202
+  end
+
+  test "get_metadata_field" do
+    subject = mock_subject \
+      {:get, "/v2/distributions/"<>id<>"/metadata/field_name", nil},
+      {200, test_sub, nil}
+
+    assert M2X.Distribution.get_metadata_field(subject, "field_name").json == test_sub
+  end
+
+  test "set_metadata_field" do
+    subject = mock_subject \
+      {:put, "/v2/distributions/"<>id<>"/metadata/field_name", %{ "value" => "field_value" }},
+      {202, nil, nil}
+
+    assert M2X.Distribution.set_metadata_field(subject, "field_name", "field_value").status == 202
+  end
+
   test "list" do
     params = %{ q: "test" }
     <<_::binary-size(1), suffix::binary>> = id

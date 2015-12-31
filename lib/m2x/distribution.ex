@@ -16,6 +16,42 @@ defmodule M2X.Distribution do
   end
 
   @doc """
+    Get the custom metadata for the specified Distribution.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#Read-Distribution-Metadata
+  """
+  def metadata(dist = %M2X.Distribution { client: client }) do
+    M2X.Client.get(client, path(dist)<>"/metadata")
+  end
+
+  @doc """
+    Update the custom metadata for the specified Distribution.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#Update-Distribution-Metadata
+  """
+  def update_metadata(dist = %M2X.Distribution { client: client }, params) do
+    M2X.Client.put(client, path(dist)<>"/metadata", params)
+  end
+
+  @doc """
+    Get the custom metadata for the specified Distribution.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#Read-Distribution-Metadata-Field
+  """
+  def get_metadata_field(dist = %M2X.Distribution { client: client }, name) do
+    M2X.Client.get(client, path(dist)<>"/metadata/"<>name)
+  end
+
+  @doc """
+    Update the custom metadata for the specified Distribution.
+
+    https://m2x.att.com/developer/documentation/v2/distribution#Update-Distribution-Metadata-Field
+  """
+  def set_metadata_field(dist = %M2X.Distribution { client: client }, name, value) do
+    M2X.Client.put(client, path(dist)<>"/metadata/"<>name, %{ "value" => value })
+  end
+
+  @doc """
     Retrieve the list of Distributions accessible by the authenticated API key
     that meet the search criteria.
 
