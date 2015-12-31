@@ -88,6 +88,42 @@ defmodule M2X.Device do
   end
 
   @doc """
+    Get the custom metadata for the specified Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#Read-Device-Metadata
+  """
+  def metadata(device = %M2X.Device { client: client }) do
+    M2X.Client.get(client, path(device)<>"/metadata")
+  end
+
+  @doc """
+    Update the custom metadata for the specified Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#Update-Device-Metadata
+  """
+  def update_metadata(device = %M2X.Device { client: client }, params) do
+    M2X.Client.put(client, path(device)<>"/metadata", params)
+  end
+
+  @doc """
+    Get the custom metadata for the specified Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#Read-Device-Metadata-Field
+  """
+  def get_metadata_field(device = %M2X.Device { client: client }, name) do
+    M2X.Client.get(client, path(device)<>"/metadata/"<>name)
+  end
+
+  @doc """
+    Update the custom metadata for the specified Device.
+
+    https://m2x.att.com/developer/documentation/v2/device#Update-Device-Metadata-Field
+  """
+  def set_metadata_field(device = %M2X.Device { client: client }, name, value) do
+    M2X.Client.put(client, path(device)<>"/metadata/"<>name, %{ "value" => value })
+  end
+
+  @doc """
     List values from all data streams of a Device.
 
     https://m2x.att.com/developer/documentation/v2/device#List-Values-from-all-Data-Streams-of-a-Device
