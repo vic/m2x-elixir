@@ -29,8 +29,8 @@ defmodule M2X.Mixfile do
   end
 
   defp package do
-    [ contributors: ["Joe McIlvain"],
-      licenses:     ["MIT"],
+    [ maintainers: ["Joe McIlvain"],
+      licenses:    ["MIT"],
       links: %{
         "GitHub"   => "https://github.com/attm2x/m2x-elixir",
         "API Docs" => "https://m2x.att.com/developer/documentation"
