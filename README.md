@@ -12,6 +12,16 @@ Refer to the [Glossary of Terms](https://m2x.att.com/developer/documentation/glo
 2. Create your first [Device](https://m2x.att.com/devices) and copy its _Device ID_.
 3. Review the [M2X API Documentation](https://m2x.att.com/developer/documentation/overview).
 
+Add the following dependency to your project's `mix.exs`
+
+```elixir
+  defp deps do
+    [
+     {:m2x, github: "attm2x/m2x-elixir"}
+    ]
+  end
+```
+
 ## Usage
 
 This library uses Elixir structs to contain data fetched from the AT&T M2X service, but these also contain all the data necessary to interact with the resource again, so they are used as convenience handles for deeper levels of the API.
